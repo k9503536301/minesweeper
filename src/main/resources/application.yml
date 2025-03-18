@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: minesweeper
+
+
+minefield:
+  field-length: 30
+
+
