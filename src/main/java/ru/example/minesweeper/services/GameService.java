@@ -139,7 +139,7 @@ public class GameService {
             throw new MinefieldException("Invalid move coordinates");
         }
 
-        if (game.getField()[row][col].getDisplayingSymbol() != FieldCellValueEnum.EMPTY) {
+        if (game.getField()[row][col].isRevealed()) {
             throw new MinefieldException("Cell already revealed");
         }
     }

@@ -4,7 +4,6 @@ import lombok.Getter;
 import ru.example.minesweeper.model.FieldCell;
 import ru.example.minesweeper.model.FieldCellValueEnum;
 
-import java.util.Arrays;
 import java.util.Random;
 import java.util.stream.Stream;
 
