@@ -11,6 +11,13 @@ import ru.example.minesweeper.dto.ErrorResponse;
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseBody
+    public ErrorResponse handleGlobalExceptions(Exception ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
     @ExceptionHandler(MinefieldException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
