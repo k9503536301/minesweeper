@@ -67,23 +67,22 @@ public class GameService {
         if (revealingCell.isMine()) {
             game.setCompleted(true);
             fieldManager.revealAllMines(FieldCellValueEnum.OPENED_MINE);
-            return toGameInfo(game, fieldManager.getField());
-        }
+        } else {
+            revealingCell.setRevealed(true);
+            revealingCell.setDisplayingSymbol(
+                    FieldCellValueEnum.fromSymbol(
+                            String.valueOf(revealingCell.getNearbyMine())
+                    )
+            );
 
-        revealingCell.setRevealed(true);
-        revealingCell.setDisplayingSymbol(
-                FieldCellValueEnum.fromSymbol(
-                        String.valueOf(revealingCell.getNearbyMine())
-                )
-        );
+            if (revealingCell.getNearbyMine() == 0) {
+                fieldManager.cascadeOpenCells(row, col);
+            }
 
-        if (revealingCell.getNearbyMine() == 0) {
-            fieldManager.cascadeOpenCells(row, col);
-        }
-
-        if (fieldManager.isGameComplete()) {
-            game.setCompleted(true);
-            fieldManager.revealAllMines(FieldCellValueEnum.MINE);
+            if (fieldManager.isGameComplete()) {
+                game.setCompleted(true);
+                fieldManager.revealAllMines(FieldCellValueEnum.MINE);
+            }
         }
 
         game.setField(fieldManager.fieldToString());
