@@ -1,9 +1,22 @@
 spring:
   application:
     name: minesweeper
-
+  datasource:
+    url: "jdbc:postgresql://localhost:5432/game_db"
+    username: "postgres"
+    password: "0000"
+    driverClassName: org.postgresql.Driver
+    initialization-mode: always
+  jpa:
+    hibernate:
+      ddl-auto: create
 
 minefield:
   field-length: 30
+
+logging:
+  level:
+    org:
+      springframework: DEBUG
 
 

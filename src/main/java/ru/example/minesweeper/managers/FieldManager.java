@@ -1,9 +1,13 @@
 package ru.example.minesweeper.managers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Getter;
+import ru.example.minesweeper.exceptions.MinefieldException;
 import ru.example.minesweeper.model.FieldCell;
 import ru.example.minesweeper.model.FieldCellValueEnum;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -22,10 +26,27 @@ public class FieldManager {
         initField();
     }
 
-    public FieldManager(FieldCell[][] field) {
+    public FieldManager(String serializedField) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            this.field = objectMapper.readValue(serializedField, FieldCell[][].class);
+        } catch (IOException ex) {
+            throw new MinefieldException(ex.getMessage());
+        }
         this.height = field.length;
         this.width = field[0].length;
-        this.field = field;
+    }
+
+    public String fieldToString() {
+        String result;
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try {
+            result = objectMapper.writeValueAsString(field);
+        } catch (JsonProcessingException ex) {
+            throw new MinefieldException(ex.getMessage());
+        }
+        return result;
     }
 
     private void initField() {
@@ -62,6 +83,14 @@ public class FieldManager {
                 }
             }
         }
+    }
+
+    public FieldCell getCellToReveal(int row, int col) {
+        if (field[row][col].isRevealed()) {
+            throw new MinefieldException("Cell already revealed");
+        }
+
+        return field[row][col];
     }
 
     public void revealAllMines(FieldCellValueEnum symbol) {
