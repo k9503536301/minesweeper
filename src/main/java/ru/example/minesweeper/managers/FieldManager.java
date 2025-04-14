@@ -9,6 +9,7 @@ import ru.example.minesweeper.model.FieldCellValueEnum;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 @Getter
@@ -58,20 +59,29 @@ public class FieldManager {
     }
 
     public void placeMines(int minesCount) {
-        Random random = new Random();
-        int mines = minesCount;
+        int[][] points = IntStream.range(0, height)
+                .boxed()
+                .flatMap(i -> IntStream.range(0, width)
+                        .mapToObj(j -> new int[] {i, j}))
+                .toArray(int[][]::new);
 
-        while (mines != 0) {
-            int row = random.nextInt(height);
-            int col = random.nextInt(width);
-            FieldCell cell = field[row][col];
+        Random rand = new Random();
 
-            if (!cell.isMine()) {
-                cell.setMine(true);
+        for (int i = 0; i < minesCount; i++) {
+            int j = rand.nextInt(points.length);
 
-                incrementNeighbors(row, col);
-                mines--;
-            }
+            int[] temp = points[i];
+            points[i] = points[j];
+            points[j] = temp;
+        }
+
+        for (int k = 0; k < minesCount; k++) {
+            int row = points[k][0];
+            int col = points[k][1];
+
+            FieldCell cell = this.field[row][col];
+            cell.setMine(true);
+            incrementNeighbors(row, col);
         }
     }
 
